@@ -1,0 +1,1067 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080709">
+  <title>BIO NEXUS — Download Center</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #080709;
+      --panel: rgba(18, 15, 18, .82);
+      --panel-light: rgba(31, 22, 25, .82);
+      --red: #ed2438;
+      --red-bright: #ff4355;
+      --red-dark: #74111d;
+      --text: #f5f0f1;
+      --muted: #93888d;
+      --line: rgba(255, 255, 255, .09);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 50% -15%, rgba(155, 18, 35, .26), transparent 45%),
+        radial-gradient(ellipse at 0% 45%, rgba(94, 10, 24, .15), transparent 35%),
+        radial-gradient(ellipse at 100% 75%, rgba(114, 15, 29, .12), transparent 36%),
+        linear-gradient(180deg, #09080a 0%, #0b090b 48%, #070608 100%);
+      font-family: "Inter", sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Cinematic background layers */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 15%, rgba(255,255,255,.018) 15.1%, transparent 15.5%),
+        linear-gradient(25deg, transparent 60%, rgba(255,255,255,.018) 60.1%, transparent 60.4%),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent 79px,
+          rgba(255,255,255,.018) 80px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0,
+          transparent 79px,
+          rgba(255,255,255,.014) 80px
+        );
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .5;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(220, 24, 49, .12), transparent 22%),
+        radial-gradient(ellipse at 80% 55%, rgba(255, 40, 55, .08), transparent 25%);
+      filter: blur(55px);
+      animation: ambient 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambient {
+      from { transform: translate3d(-2%, -1%, 0) scale(1); }
+      to   { transform: translate3d(2%, 2%, 0) scale(1.08); }
+    }
+
+    .film-grain {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+    }
+
+    .ambient-orb {
+      position: fixed;
+      z-index: -1;
+      width: 330px;
+      height: 330px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .13;
+      pointer-events: none;
+    }
+
+    .orb-one {
+      top: 12%;
+      left: -180px;
+      background: #ed2438;
+    }
+
+    .orb-two {
+      right: -180px;
+      top: 55%;
+      background: #8c1428;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 30px 0 55px;
+    }
+
+    /* Header */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(237, 36, 56, .35));
+    }
+
+    .brand-name {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 2.2px;
+      line-height: 1;
+    }
+
+    .brand-name span {
+      color: var(--red-bright);
+    }
+
+    .brand-caption {
+      margin-top: 5px;
+      font-size: 9px;
+      letter-spacing: 2.4px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #b5aeb1;
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e83b4d;
+      box-shadow: 0 0 12px rgba(232, 59, 77, .85);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .4; }
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 285px;
+      display: flex;
+      align-items: center;
+      padding: 55px 5%;
+      margin: 25px 0 28px;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 24px;
+      background:
+        linear-gradient(90deg, rgba(8,7,9,.98) 0%, rgba(13,8,11,.9) 52%, rgba(13,8,11,.5) 100%),
+        radial-gradient(ellipse at 80% 40%, rgba(204, 25, 47, .28), transparent 55%),
+        linear-gradient(135deg, #171014, #080709 70%);
+      box-shadow: 0 25px 80px rgba(0,0,0,.35);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 440px;
+      height: 440px;
+      right: -100px;
+      top: -150px;
+      border: 1px solid rgba(255, 65, 83, .16);
+      transform: rotate(35deg);
+      box-shadow:
+        0 0 0 35px rgba(255, 65, 83, .025),
+        0 0 0 70px rgba(255, 65, 83, .018);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 150%;
+      top: -25%;
+      right: 22%;
+      transform: rotate(30deg);
+      background: linear-gradient(transparent, rgba(255, 50, 70, .45), transparent);
+      box-shadow: 0 0 30px rgba(255, 40, 60, .15);
+    }
+
+    .hero-content {
+      max-width: 620px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--red-bright);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 25px;
+      height: 1px;
+      background: var(--red-bright);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    .hero h1 {
+      margin-top: 15px;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: clamp(43px, 8vw, 78px);
+      line-height: .91;
+      letter-spacing: 1px;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow: 0 8px 35px rgba(0,0,0,.45);
+    }
+
+    .hero h1 span {
+      display: block;
+      color: var(--red-bright);
+    }
+
+    .hero p {
+      max-width: 430px;
+      margin-top: 19px;
+      color: #a79da1;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .hero-line {
+      width: 90px;
+      height: 3px;
+      margin-top: 22px;
+      background: linear-gradient(90deg, var(--red-bright), transparent);
+    }
+
+    /* Access gate */
+    .access-panel {
+      position: relative;
+      max-width: 540px;
+      margin: 0 auto 30px;
+      padding: 24px;
+      border: 1px solid rgba(255, 50, 70, .22);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(25,17,20,.93), rgba(12,10,12,.95));
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .access-heading {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 17px;
+    }
+
+    .key-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      color: #ff5262;
+      background: rgba(237,36,56,.1);
+      border: 1px solid rgba(237,36,56,.24);
+    }
+
+    .key-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .access-heading h2 {
+      font-size: 14px;
+      letter-spacing: .5px;
+    }
+
+    .access-heading p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .key-form {
+      display: flex;
+      gap: 9px;
+    }
+
+    .key-input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px 15px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+      outline: none;
+      color: white;
+      background: rgba(0,0,0,.35);
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: 1px;
+      transition: border .2s, box-shadow .2s;
+    }
+
+    .key-input:focus {
+      border-color: rgba(255,65,83,.65);
+      box-shadow: 0 0 0 3px rgba(237,36,56,.08);
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 19px;
+      min-height: 46px;
+      border: 1px solid #ff4053;
+      border-radius: 10px;
+      color: white;
+      background: linear-gradient(135deg, #e62a40, #9e1428);
+      font: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 7px 24px rgba(190,20,40,.2);
+      transition: transform .2s, filter .2s, box-shadow .2s;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+      box-shadow: 0 10px 28px rgba(190,20,40,.3);
+    }
+
+    .key-message {
+      min-height: 16px;
+      margin-top: 10px;
+      color: #ff6b78;
+      font-size: 11px;
+    }
+
+    /* Download section */
+    .download-area {
+      display: none;
+      animation: reveal .5s ease both;
+    }
+
+    .download-area.unlocked {
+      display: block;
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 15px;
+      margin: 38px 0 17px;
+    }
+
+    .section-kicker {
+      color: var(--red-bright);
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin-top: 7px;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 31px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .section-count {
+      color: #71686c;
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 7px;
+      padding: 6px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(12,10,12,.75);
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 75px;
+      padding: 12px 15px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: #8d8388;
+      background: transparent;
+      font: inherit;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+      cursor: pointer;
+      transition: .22s ease;
+    }
+
+    .tab:hover {
+      color: white;
+      background: rgba(255,255,255,.035);
+    }
+
+    .tab.active {
+      color: white;
+      border-color: rgba(255,65,83,.25);
+      background: linear-gradient(135deg, rgba(197,26,47,.24), rgba(75,13,24,.18));
+      box-shadow: inset 0 0 18px rgba(237,36,56,.06);
+    }
+
+    .tab.active::before {
+      content: "▰ ";
+      color: var(--red-bright);
+    }
+
+    .tab-content {
+      display: none;
+      padding-top: 20px;
+      animation: reveal .35s ease both;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .file-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.085);
+      border-radius: 17px;
+      background:
+        linear-gradient(145deg, rgba(25,20,23,.94), rgba(12,10,12,.96));
+      box-shadow: 0 14px 38px rgba(0,0,0,.22);
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+
+    .file-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,60,78,.34);
+      box-shadow: 0 20px 45px rgba(0,0,0,.35), 0 0 28px rgba(180,20,40,.07);
+    }
+
+    .card-art {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 70% 40%, rgba(220,25,47,.23), transparent 45%),
+        linear-gradient(135deg, #1b1014, #090809);
+    }
+
+    .card-art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(12,9,11,.88), transparent 65%);
+      pointer-events: none;
+    }
+
+    .card-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: .86;
+      transition: transform .6s ease, opacity .3s;
+    }
+
+    .file-card:hover .card-art img {
+      transform: scale(1.045);
+      opacity: 1;
+    }
+
+    .art-label {
+      position: absolute;
+      z-index: 1;
+      left: 17px;
+      bottom: 15px;
+      color: rgba(255,255,255,.78);
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .file-tag {
+      position: absolute;
+      z-index: 2;
+      top: 13px;
+      right: 13px;
+      padding: 6px 9px;
+      border: 1px solid rgba(255,70,85,.28);
+      border-radius: 6px;
+      color: #ff6978;
+      background: rgba(12,8,10,.75);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 19px;
+    }
+
+    .card-title {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+
+    .card-description {
+      min-height: 40px;
+      margin-top: 8px;
+      color: #9b9095;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 15px 0 18px;
+    }
+
+    .meta-chip {
+      padding: 6px 8px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 6px;
+      color: #8e8589;
+      background: rgba(255,255,255,.025);
+      font-size: 9px;
+      letter-spacing: .7px;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 45px;
+      margin-top: auto;
+      border: 1px solid rgba(255,65,83,.38);
+      border-radius: 9px;
+      color: #fff;
+      background: linear-gradient(100deg, rgba(176,22,42,.85), rgba(104,15,28,.8));
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      transition: .2s ease;
+    }
+
+    .download-btn:hover {
+      border-color: #ff6876;
+      background: linear-gradient(100deg, #d8243c, #8c1428);
+      box-shadow: 0 7px 22px rgba(190,20,40,.22);
+    }
+
+    .download-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .empty-state {
+      padding: 42px 20px;
+      border: 1px dashed rgba(255,255,255,.1);
+      border-radius: 15px;
+      color: #82777c;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 7px;
+      color: #c7bfc2;
+      font-size: 14px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 45px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: #655d61;
+      font-size: 9px;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    .footer span:last-child {
+      color: #8c777d;
+    }
+
+    @media (max-width: 650px) {
+      .page {
+        width: min(100% - 24px, 520px);
+        padding-top: 18px;
+      }
+
+      .topbar {
+        padding-bottom: 14px;
+      }
+
+      .brand-logo {
+        width: 35px;
+        height: 35px;
+      }
+
+      .brand-name {
+        font-size: 20px;
+      }
+
+      .status {
+        font-size: 8px;
+        letter-spacing: .8px;
+      }
+
+      .hero {
+        min-height: 245px;
+        padding: 36px 25px;
+        border-radius: 19px;
+      }
+
+      .hero h1 {
+        font-size: clamp(43px, 13vw, 66px);
+      }
+
+      .hero p {
+        max-width: 300px;
+        font-size: 11px;
+      }
+
+      .access-panel {
+        padding: 19px;
+      }
+
+      .key-form {
+        flex-direction: column;
+      }
+
+      .primary-btn {
+        width: 100%;
+      }
+
+      .section-head h2 {
+        font-size: 27px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card-art {
+        height: 190px;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="film-grain"></div>
+  <div class="ambient-orb orb-one"></div>
+  <div class="ambient-orb orb-two"></div>
+
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="images/logo.png" alt="BIO NEXUS logo"
+             onerror="this.style.display='none'">
+        <div>
+          <div class="brand-name">BIO <span>NEXUS</span></div>
+          <div class="brand-caption">Digital Arsenal · Download Hub</div>
+        </div>
+      </div>
+
+      <div class="status">
+        <span class="status-dot"></span>
+        System online
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Welcome to the nexus</div>
+        <h1>Enter the <span>dark zone.</span></h1>
+        <p>
+          A curated digital hub for your files and tools.
+          Unlock the portal to explore the collection.
+        </p>
+        <div class="hero-line"></div>
+      </div>
+    </section>
+
+    <section class="access-panel" id="accessPanel">
+      <div class="access-heading">
+        <div class="key-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 2l-2 2m-7.5 7.5a5 5 0 1 1-7.07-7.07 5 5 0 0 1 7.07 7.07Z"/>
+            <path d="m14 9 3 3 2-2 2 2 2-2"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Portal authentication</h2>
+          <p>Enter your access key to continue</p>
+        </div>
+      </div>
+
+      <form class="key-form" id="keyForm">
+        <input
+          class="key-input"
+          id="keyInput"
+          type="password"
+          placeholder="ENTER ACCESS KEY"
+          autocomplete="off"
+          aria-label="Access key"
+        >
+        <button class="primary-btn" type="submit">Unlock portal</button>
+      </form>
+      <div class="key-message" id="keyMessage" aria-live="polite"></div>
+    </section>
+
+    <section class="download-area" id="downloadArea">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Collection / 2026</div>
+          <h2>Download center</h2>
+        </div>
+        <div class="section-count">BIO NEXUS // FILES</div>
+      </div>
+
+      <nav class="tabs" aria-label="Download categories">
+        <button class="tab active" data-tab="config" type="button">CONFIG</button>
+        <button class="tab" data-tab="offset" type="button">OFFSET</button>
+        <button class="tab" data-tab="aim" type="button">AIM</button>
+        <button class="tab" data-tab="mod" type="button">MOD</button>
+      </nav>
+
+      <!-- CONFIG -->
+      <section class="tab-content active" data-content="config">
+        <div class="cards">
+          <article class="file-card">
+            <div class="card-art">
+              <img src="images/aim.png" alt="AimLock artwork"
+                   onerror="this.style.display='none'">
+              <span class="file-tag">CONFIG</span>
+              <span class="art-label">NEXUS FILE SERIES / 01</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">AimLock</h3>
+              <p class="card-description">
+                AimLock configuration package.
+              </p>
+              <div class="card-meta">
+                <span class="meta-chip">ZIP FILE</span>
+                <span class="meta-chip">DOWNLOAD</span>
+              </div>
+              <a class="download-btn"
+                 href="https://github.com/user-attachments/files/33627083/AimLock.zip"
+                 target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14"/></svg>
+                Download file
+              </a>
+            </div>
+          </article>
+
+          <article class="file-card">
+            <div class="card-art">
+              <img src="images/aim.png" alt="AimDrag artwork"
+                   onerror="this.style.display='none'">
+              <span class="file-tag">CONFIG</span>
+              <span class="art-label">NEXUS FILE SERIES / 02</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">AimDrag</h3>
+              <p class="card-description">
+                AimDrag configuration package.
+              </p>
+              <div class="card-meta">
+                <span class="meta-chip">ZIP FILE</span>
+                <span class="meta-chip">DOWNLOAD</span>
+              </div>
+              <a class="download-btn"
+                 href="https://github.com/user-attachments/files/33627166/AimDrag.zip"
+                 target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14"/></svg>
+                Download file
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- OFFSET -->
+      <section class="tab-content" data-content="offset">
+        <div class="cards">
+          <article class="file-card">
+            <div class="card-art">
+              <img src="images/aim.png" alt="Offset artwork"
+                   onerror="this.style.display='none'">
+              <span class="file-tag">OFFSET</span>
+              <span class="art-label">NEXUS FILE SERIES / 03</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">Offset File</h3>
+              <p class="card-description">
+                Offset file hosted on MediaFire.
+              </p>
+              <div class="card-meta">
+                <span class="meta-chip">CS FILE</span>
+                <span class="meta-chip">MEDIAFIRE</span>
+              </div>
+              <a class="download-btn"
+                 href="https://www.mediafire.com/file/dmki3w3vubc5j1i/com.dts.freefireth+[X64].cs/file"
+                 target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14"/></svg>
+                Open download
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- AIM -->
+      <section class="tab-content" data-content="aim">
+        <div class="cards">
+          <article class="file-card">
+            <div class="card-art">
+              <img src="images/aim.png" alt="AimLock Demo artwork"
+                   onerror="this.style.display='none'">
+              <span class="file-tag">DEMO</span>
+              <span class="art-label">NEXUS FILE SERIES / 04</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">AimLock Demo</h3>
+              <p class="card-description">
+                Demo JSON file. Check the file details before using it.
+              </p>
+              <div class="card-meta">
+                <span class="meta-chip">JSON FILE</span>
+                <span class="meta-chip">MEDIAFIRE</span>
+              </div>
+              <a class="download-btn"
+                 href="https://www.mediafire.com/file/d5mr1aqm6amco2x/localConfigPatch.json/file"
+                 target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14"/></svg>
+                Download demo
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- MOD -->
+      <section class="tab-content" data-content="mod">
+        <div class="cards">
+          <article class="file-card">
+            <div class="card-art">
+              <img src="images/mod.png" alt="Mod skin artwork"
+                   onerror="this.style.display='none'">
+              <span class="file-tag">MOD</span>
+              <span class="art-label">NEXUS FILE SERIES / 05</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">Mod Skin Pro Player V4</h3>
+              <p class="card-description">
+                Mod skin package hosted on MediaFire.
+              </p>
+              <div class="card-meta">
+                <span class="meta-chip">ZIP FILE</span>
+                <span class="meta-chip">MEDIAFIRE</span>
+              </div>
+              <a class="download-btn"
+                 href="https://www.mediafire.com/file/syjj3usxrursc3a/%5BADR%2BFFTH%5D+-+MOD+SKIN+PRO+PLAYER+V4.zip/file"
+                 target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14"/></svg>
+                Download mod
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <span>© 2026 BIO NEXUS · Digital portal</span>
+      <span>Built for the dark side</span>
+    </footer>
+  </main>
+
+  <script>
+    /*
+      Demo-only client-side key gate.
+      A key embedded in frontend code is visible to visitors and is not secure.
+      Use server-side authentication for real access control.
+    */
+    const DEMO_KEY = "ffth";
+
+    const keyForm = document.getElementById("keyForm");
+    const keyInput = document.getElementById("keyInput");
+    const keyMessage = document.getElementById("keyMessage");
+    const downloadArea = document.getElementById("downloadArea");
+    const accessPanel = document.getElementById("accessPanel");
+
+    keyForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (keyInput.value.trim() === DEMO_KEY) {
+        keyMessage.textContent = "Access granted.";
+        keyMessage.style.color = "#79d6a2";
+        downloadArea.classList.add("unlocked");
+        accessPanel.style.display = "none";
+        downloadArea.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        keyMessage.textContent = "Invalid key. Please try again.";
+        keyMessage.style.color = "#ff6b78";
+        keyInput.value = "";
+        keyInput.focus();
+      }
+    });
+
+    const tabButtons = document.querySelectorAll(".tab");
+    const tabPanels = document.querySelectorAll(".tab-content");
+
+    tabButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const selectedTab = button.dataset.tab;
+
+        tabButtons.forEach(function (item) {
+          item.classList.toggle("active", item === button);
+        });
+
+        tabPanels.forEach(function (panel) {
+          panel.classList.toggle(
+            "active",
+            panel.dataset.content === selectedTab
+          );
+        });
+      });
+    });
+  </script>
+</body>
+</html>
